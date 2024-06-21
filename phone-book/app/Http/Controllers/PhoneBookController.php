@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PhoneBook;
 use App\Http\Requests\PhoneBookRequest;
+use App\Http\Requests\UpdateBookRequest;
 use Illuminate\Http\Request;
 use Response;
 
@@ -83,21 +84,12 @@ class PhoneBookController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(PhoneBookRequest $request, $contactId)
+    public function update(UpdateBookRequest $request, $contactId)
     {
         try {
             $contact = PhoneBook::findOrFail($contactId);
             $validatedData = $request->validated();
 
-            if ($contact->contact_number !== $validatedData['contact_number']) {
-                $request->validate([
-                    'contact_number' => [
-                        'unique:phone_books,contact_number',
-                    ],
-                ], [
-                    'contact_number.unique' => 'Contact number already exists',
-                ]);
-            }
 
             $contact->name = $validatedData['name'];
             $contact->contact_number = $validatedData['contact_number'];
